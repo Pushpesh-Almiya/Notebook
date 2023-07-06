@@ -1,6 +1,7 @@
 const express = require("express");
 const router = new express.Router();
 const User = require("../models/User");
+const bcrypt = require("bcryptjs");
 
 //  create a user>>>
 router.post("/api/auth/createuser", async (req, res) => {
@@ -18,5 +19,22 @@ router.post("/api/auth/createuser", async (req, res) => {
     res.status(400).send("Some error occurs " + error);
   }
 });
+
+//Login EndPoint.... Authenticate user......
+router.post("/api/auth/login", async(req,res)=>{
+  try {
+    let email = req.body.email;
+    let password = req.body.password;
+    let userData = await User.findOne({email:email})
+    const ismatch = await bcrypt.compare(password, userData.password)
+    if(ismatch){
+      res.status(200).send(userData)
+    }else{
+      res.status(400).send("Please enter valid cradentials")
+    }
+  } catch (error) {
+    res.status(500).send("Invalid login details")
+  }
+})
 
 module.exports = router;
