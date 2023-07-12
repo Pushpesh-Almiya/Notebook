@@ -1,19 +1,30 @@
 const mongoose= require('mongoose')
-const userSchema = new mongoose.Schema({
-    name:{
-        type: String,
-        require: true
+const notesSchema = new mongoose.Schema({
+    user:{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Users"
     },
-    email:{
+    title:{
         type: String,
-        require: true,
-        unique : true
+        required: true,
+        minlength :[3, "Title should be atleast 3 letters"]
+
     },
-    password:{
+    description:{
         type: String,
-        require: true
+        required: true,
+        minlength :[5, "Description should be atleast 5 letters"]
+    },
+    tag:{
+        type: String,
+        required: true,
+        minlength :[3, "Tag  should be atleast 3 letters"]
+    },
+    date:{
+        type : Date,
+        default: Date.now
     }
 })
 
-const Users = mongoose.model("Users", userSchema)
-module.exports = Users;
+const Notes = mongoose.model("Notes", notesSchema)
+module.exports = Notes;
