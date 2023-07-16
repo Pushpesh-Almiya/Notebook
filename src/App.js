@@ -1,10 +1,22 @@
-import React from 'react'
-
+import React from "react";
+import Navbar from "./Components/Navbar";
+import NoteState from "./Context/Notes/NoteState";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./Components/Home";
+import About from "./Components/About";
 function App() {
   return (
-    <div >
-      <h1 className='text-4xl font-bold text-center'>Hello</h1>
-    </div>
+    <>
+      <NoteState>
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route exact path="/about" element={<About />} />
+          </Routes>
+        </Router>
+      </NoteState>
+    </>
   );
 }
 

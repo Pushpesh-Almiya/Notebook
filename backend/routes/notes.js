@@ -1,5 +1,5 @@
 const express = require("express");
-const router = new express.Router();
+const router = express.Router();
 const Notes = require("../models/Notes");
 const fetchUser = require("../middleware/Getuser");
 
@@ -30,7 +30,7 @@ router.get("/api/notes/getnotes", fetchUser, async (req, res) => {
       res.status(404).send("Didn't get the notes of this user");
     } else {
       res.status(200).json(userNotes);
-      console.log(req.user.id);
+      // console.log(req.user.id);
     }
   } catch (error) {
     res.status(500).send("Internal server errorb " + error);
