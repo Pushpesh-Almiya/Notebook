@@ -24,7 +24,7 @@ function Home() {
             Notebook -{" "}
             <span className=" text-3xl">Your notes on the cloud</span>{" "}
           </h1>
-          <form action="" className="flex flex-col justify-center items-center">
+          <form action="" onSubmit={submitNote} className="flex flex-col justify-center items-center">
             <input
               className=" p-2 my-1 rounded-lg w-3/4 outline-none"
               value={note.title}
@@ -57,11 +57,11 @@ function Home() {
               placeholder="Enter your Discription"
             ></textarea>
           <div className="flex justify-center items-center">
-            <button
+            <button disabled={note.title.length < 3||note.title.length < 3}
               type="submit"
-              className="my-4 border-2 text-white hover:scale-110 duration-300 border-white p-3 rounded-full bg-gradient-to-r from-blue-900 to-cyan-500"
-              onClick={submitNote}
-              disabled={note.title.length < 3}
+              className={`my-4 border-2 rounded-full p-3 border-white   ${note.title.length<3 || note.description.length < 3?"bg-blue-200": "text-white hover:scale-110 duration-300 bg-gradient-to-r from-blue-900 to-cyan-500"}`}
+              
+              
             >
               Add Note
             </button>

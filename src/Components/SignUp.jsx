@@ -1,10 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext} from "react";
 import { useNavigate, Link } from "react-router-dom";
 import noteContext from "../Context/Notes/noteContext";
 
 function Login() {
   const context = useContext(noteContext);
-  const {showAlert}= context;
+  const {showAlert,signUp}= context;
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -15,26 +15,13 @@ function Login() {
   const navigate = useNavigate();
   const handelSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch(`http://127.0.0.1:8000/api/auth/createuser`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: data.name,
-        email: data.email,
-        password: data.password,
-      }),
-    });
-    const json = await response.json();
-    console.log(json);
-    if (json.success) {
-      localStorage.setItem("token", json.authToken);
-      navigate("/");
-      showAlert("green",`Welcome ${data.name}`)
-    } else {
-      alert("Invalid credentials");
-    }
+    await signUp(data.name,data.email,data.password)
+     if (localStorage.getItem("token")) {
+        navigate("/");
+        showAlert("green",`Welcome ${data.name}`)
+      } else {
+        alert("Invalid credentials");
+      }
   };
   const onchange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });

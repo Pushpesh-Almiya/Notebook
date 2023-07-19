@@ -14,13 +14,14 @@ router.post("/api/auth/createuser", async (req, res) => {
     success=false
     let user = await User.findOne({ email: req.body.email });
     if (user) {
-      res.status(400).send("The user is already exists");
+      res.status(400).send("This user is already exists");
+      alert("This user is already exists")
     } else {
       const createUser = new User(req.body);
       await createUser.save();
       const authToken = jwt.sign(createUser.id, secretKey)
       success=true
-      res.status(201).json({success, authToken});
+      res.status(201).json({success, authToken,createUser});
       console.log(createUser)
     }
   } catch (error) {
@@ -41,9 +42,10 @@ router.post("/api/auth/login", async(req,res)=>{
     if(ismatch){
       authToken = jwt.sign(userData.id, secretKey)
       success=true
-      res.status(201).json({success,authToken});
+      res.status(201).json({success,authToken,userData});
     }else{
       res.status(400).send("Please enter valid cradentials")
+      alert("Please enter valid cradentials")
     }
   } catch (error) {
     success=false

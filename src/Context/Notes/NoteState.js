@@ -5,7 +5,40 @@ const NoteState = (props) => {
   const notesInitails =[]
   const [notes, setNotes]= useState(notesInitails)
   const [alert,setAlert]= useState({color:"",message:""})
+  const [userName,setUserName]=useState("")
   const host = "http://127.0.0.1:8000"
+
+
+  //SignUp......
+
+
+  const signUp =async(name,email,password)=>{
+    const response = await fetch(`http://127.0.0.1:8000/api/auth/createuser`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({name,email,password}),
+    });
+    const json = await response.json();
+    localStorage.setItem("token", json.authToken);
+    setUserName(json.createUser.name)
+  }
+
+
+  //Login..........
+  const login =async(email,password)=>{
+    const response = await fetch(`http://127.0.0.1:8000/api/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({email,password}),
+    });
+    const json = await response.json();
+    localStorage.setItem("token", json.authToken);
+    setUserName(json.userData.name)
+  }
 
 
   //Alert.......
@@ -88,7 +121,7 @@ const NoteState = (props) => {
     setNotes(newNotes)
   }
   return(
-    <noteContext.Provider value={{notes, setNotes, addNote,deleteNote ,getNotes,editNote,showAlert,alert}}>{props.children}</noteContext.Provider>
+    <noteContext.Provider value={{notes, setNotes, addNote,deleteNote ,getNotes,editNote,showAlert,alert,signUp,userName,login}}>{props.children}</noteContext.Provider>
     )
   };
 

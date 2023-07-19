@@ -1,29 +1,19 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import noteContext from "../Context/Notes/noteContext";
 
 function Login() {
   const context = useContext(noteContext);
-  const {showAlert}= context;
+  const { showAlert, login ,userName} = context;
   const [data, setData] = useState({ email: "", password: "" });
 
   const navigate = useNavigate();
   const handelSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch(`http://127.0.0.1:8000/api/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: data.email, password: data.password }),
-    });
-    const json = await response.json();
-    console.log(json)
-    if (json.success) {
-      localStorage.setItem("token", json.authToken);
+    await login(data.email, data.password);
+    if (localStorage.getItem("token")) {
       navigate("/");
-      
-      showAlert("blue",`Welcome back ${data.email} at Notebook `)
+      showAlert("blue", `Welcome back ${userName} at Notebook `);
     } else {
       alert("Invalid credentials");
     }
