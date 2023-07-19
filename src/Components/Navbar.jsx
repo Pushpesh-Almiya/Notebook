@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Link} from "react-router-dom";
+import {useNavigate, Link } from "react-router-dom";
 
 function Navbar() {
   const [toggle, setToggle] = useState(false);
@@ -7,55 +7,74 @@ function Navbar() {
     {
       id: 1,
       link: "home",
-      path:"/"
+      path: "/",
     },
     {
       id: 2,
       link: "about",
-      path:"/about"
-    },{
+      path: "/about",
+    },
+    {
       id: 3,
       link: "Contact",
-      path:"/contact"
+      path: "/contact",
     },
     {
       id: 4,
       link: "Services",
-      path:"/services"
+      path: "/services",
     },
   ];
+  const navigate = useNavigate();
+  const logoutBtn=()=>{
+    localStorage.removeItem("token")
+    navigate("/login")
+
+  }
   return (
     <>
-      <div className=" flex justify-between items-center w-full h-20 bg-blue-900 text-white">
-        <h1 className="text-5xl ml-2 font-signature">Notebook</h1>
-        <ul className=" hidden md:flex">
-          {links.map(({ id, link,path}) => (
-            <li
-              key={id}
-              className="px-4 text-xl cursor-pointer capitalize hover:scale-110 duration-300"
-            >
-              <Link to={path}>{link}</Link>
+      <div className={`flex justify-${!localStorage.getItem("token")?"center":"between"} items-center w-full h-20 bg-blue-900 text-white`}>
+        <h1 className={`text-5xl ml-2 font-signature`}>Notebook</h1>
+        {localStorage.getItem("token")&&<div className="hidden md:flex justify-center items-center">
+        <ul className="flex">
+            <li className="px-4 text-xl cursor-pointer capitalize hover:scale-110 duration-300">
+              <Link to="/">Home</Link>
             </li>
-          ))}
-        </ul>
+            <li className="px-4 text-xl cursor-pointer capitalize hover:scale-110 duration-300">
+              <Link to="/about">About</Link>
+            </li>
+          </ul>
+          <button
+              type="submit" onClick={logoutBtn}
+              className="mx-4  text-white hover:scale-110 duration-300 border-white p-2 rounded-lg bg-green-500"
+            >
+              Logout
+            </button>
+        </div>}
         <div
           onClick={() => setToggle(!toggle)}
           className="cursor-pointer md:hidden pe-4 z-10 text-white"
         >
-          {toggle ? <i className="fa-solid fa-xmark text-4xl"></i> : <i className="fa-solid fa-bars text-4xl"></i>}
+          {toggle ? (
+            <i className="fa-solid fa-xmark text-4xl"></i>
+          ) : (
+            <i className="fa-solid fa-bars text-4xl"></i>
+          )}
         </div>
         {toggle && (
-        <ul className="flex flex-col justify-center items-center absolute top-0 right-0 w-40 h-screen backdrop-blur-lg border-r-2 border-white md:hidden">
-          {links.map(({ id, link,path }) => (
-            <li
-              key={id}
-              className="py-4 cursor-pointer capitalize font-medium z-10 text-black hover:scale-110 duration-200 text-2xl"
-            >
-              <Link to={path} onClick={()=>setToggle(!toggle)}>{link}</Link>
-            </li>
-          ))}
-        </ul>
-      )}
+          <ul className="flex flex-col justify-center items-center absolute top-0 right-0 w-40 h-screen backdrop-blur-lg border-r-2 border-white md:hidden">
+            {links.map(({ id, link, path }) => (
+              <li
+                key={id}
+                className="py-4 cursor-pointer capitalize font-medium z-10 text-black hover:scale-110 duration-200 text-2xl"
+              >
+                <Link to={path} onClick={() => setToggle(!toggle)}>
+                  {link}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </>
   );

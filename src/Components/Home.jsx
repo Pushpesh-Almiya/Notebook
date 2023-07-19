@@ -3,7 +3,7 @@ import Notes from "./Notes";
 import noteContext from "../Context/Notes/noteContext";
 function Home() {
   const context = useContext(noteContext);
-  const { addNote } = context;
+  const { addNote, showAlert } = context;
   const [note, setNote] = useState({ title: "", description: "", tag: "" });
 
   const onchange = (e) => {
@@ -14,44 +14,54 @@ function Home() {
   const submitNote = (e) => {
     e.preventDefault();
     addNote(note.title, note.description, note.tag);
+    setNote({ title: "", description: "", tag: "" });
+    showAlert("green", "Your note has been added")
   };
   return (
     <div className=" w-full flex flex-col justify-center">
-      <div className="w-full h-4/6 md:w-3/4 md:h-3/4 bg-yellow-600 border-2 border-white mx-auto my-5">
-        <form action="">
+      <div className="w-full h-4/6 md:w-3/4 md:h-3/4 bg-yellow-400 border-2 border-white mx-auto my-2">
           <h1 className="text-center text-2xl font-signature md:text-4xl">
             Notebook -{" "}
             <span className=" text-3xl">Your notes on the cloud</span>{" "}
           </h1>
           <form action="" className="flex flex-col justify-center items-center">
             <input
-              className=" p-2 my-1 rounded-lg w-3/4"
+              className=" p-2 my-1 rounded-lg w-3/4 outline-none"
+              value={note.title}
               type="text"
               name="title"
               id="title"
               placeholder="Enter your Title"
-              onChange={onchange} minLength={3} required
+              onChange={onchange}
+              minLength={3}
+              required
             />
             <input
-              className=" p-2 my-1 rounded-lg w-3/4"
+              className=" p-2 my-1 rounded-lg w-3/4 outline-none"
+              value={note.tag}
               type="text"
               name="tag"
               placeholder={"Enter your Tag"}
-              onChange={onchange} minLength={3} required
+              onChange={onchange}
+              minLength={3}
+              required
             />
             <textarea
-              className=" p-2 my-1 rounded-lg w-3/4 "
+              className=" p-2 my-1 rounded-lg w-3/4 outline-none "
+              value={note.description}
               rows="3"
               name="description"
-              onChange={onchange} minLength={3} required
+              onChange={onchange}
+              minLength={3}
+              required
               placeholder="Enter your Discription"
             ></textarea>
-          </form>
           <div className="flex justify-center items-center">
             <button
               type="submit"
               className="my-4 border-2 text-white hover:scale-110 duration-300 border-white p-3 rounded-full bg-gradient-to-r from-blue-900 to-cyan-500"
-              onClick={submitNote} disabled={note.title.length<3}
+              onClick={submitNote}
+              disabled={note.title.length < 3}
             >
               Add Note
             </button>

@@ -11,6 +11,7 @@ const fetchUser = require("../middleware/Getuser")
 //  create a user>>>
 router.post("/api/auth/createuser", async (req, res) => {
   try{
+    success=false
     let user = await User.findOne({ email: req.body.email });
     if (user) {
       res.status(400).send("The user is already exists");
@@ -18,16 +19,19 @@ router.post("/api/auth/createuser", async (req, res) => {
       const createUser = new User(req.body);
       await createUser.save();
       const authToken = jwt.sign(createUser.id, secretKey)
-      res.status(201).json({authToken});
+      success=true
+      res.status(201).json({success, authToken});
       console.log(createUser)
     }
   } catch (error) {
+    success=false
     res.status(400).send("Some error occurs " + error);
   }
 });
 
 //Login EndPoint.... Authenticate user......
 router.post("/api/auth/login", async(req,res)=>{
+  let success=false
   try {
     // let email = req.body.email;
     // let password = req.body.password;
@@ -36,12 +40,14 @@ router.post("/api/auth/login", async(req,res)=>{
     const ismatch = await bcrypt.compare(password, userData.password)
     if(ismatch){
       authToken = jwt.sign(userData.id, secretKey)
-      res.status(201).json({authToken});
+      success=true
+      res.status(201).json({success,authToken});
     }else{
       res.status(400).send("Please enter valid cradentials")
     }
   } catch (error) {
-    res.status(500).send("Internal server error!!")
+    success=false
+    res.status(500).send(success, "Internal server error!!")
   }
 })
 

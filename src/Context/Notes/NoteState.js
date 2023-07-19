@@ -4,7 +4,20 @@ import { useState } from "react";
 const NoteState = (props) => {
   const notesInitails =[]
   const [notes, setNotes]= useState(notesInitails)
+  const [alert,setAlert]= useState({color:"",message:""})
   const host = "http://127.0.0.1:8000"
+
+
+  //Alert.......
+  const showAlert=(color, message)=>{
+    setAlert({
+      color:color,
+      message:message
+    })
+    setTimeout(() => {
+      setAlert('')
+    }, 2000);
+  }
 
   //Get All notes.....
   const getNotes = async()=>{
@@ -12,7 +25,7 @@ const NoteState = (props) => {
       method:'GET',
       headers: {
         'Content-Type': 'application/json',
-        "auth-token":"eyJhbGciOiJIUzI1NiJ9.NjRhNjhkYWQxMThiMDA5ZTRjZWE1ODQz.QLOQN6iV4o0897dS7I6wf1it30Y2wYCbgRBcTyt6Z5A"
+        "auth-token":localStorage.getItem('token')
       }
     })
     const json = await response.json()
@@ -26,7 +39,7 @@ const NoteState = (props) => {
       method:'POST',
       headers: {
         'Content-Type': 'application/json',
-        "auth-token":"eyJhbGciOiJIUzI1NiJ9.NjRhNjhkYWQxMThiMDA5ZTRjZWE1ODQz.QLOQN6iV4o0897dS7I6wf1it30Y2wYCbgRBcTyt6Z5A"
+        "auth-token":localStorage.getItem('token')
       },
       body:JSON.stringify({title,description,tag})
     })
@@ -40,11 +53,10 @@ const NoteState = (props) => {
       method:'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        "auth-token":"eyJhbGciOiJIUzI1NiJ9.NjRhNjhkYWQxMThiMDA5ZTRjZWE1ODQz.QLOQN6iV4o0897dS7I6wf1it30Y2wYCbgRBcTyt6Z5A"
+        "auth-token":localStorage.getItem('token')
       }
     })
     await response.json();
-    console.log("deleted "+ id)
     const newNotes= notes.filter((note)=>{return note._id !==id}) //If note._id 
     setNotes(newNotes)
   }
@@ -55,7 +67,7 @@ const NoteState = (props) => {
       method:'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        "auth-token":"eyJhbGciOiJIUzI1NiJ9.NjRhNjhkYWQxMThiMDA5ZTRjZWE1ODQz.QLOQN6iV4o0897dS7I6wf1it30Y2wYCbgRBcTyt6Z5A"
+        "auth-token":localStorage.getItem('token')
       },
       body:JSON.stringify({title,description,tag})
     })
@@ -76,7 +88,7 @@ const NoteState = (props) => {
     setNotes(newNotes)
   }
   return(
-    <noteContext.Provider value={{notes, setNotes, addNote,deleteNote ,getNotes,editNote}}>{props.children}</noteContext.Provider>
+    <noteContext.Provider value={{notes, setNotes, addNote,deleteNote ,getNotes,editNote,showAlert,alert}}>{props.children}</noteContext.Provider>
     )
   };
 
